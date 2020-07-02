@@ -1,5 +1,6 @@
 node_modules/
 clientold/
+.firebase/
 firebase.json
 firestore/indexes.json
 firestore.rules
