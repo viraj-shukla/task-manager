@@ -1,0 +1,8 @@
+node_modules/
+clientold/
+firebase.json
+firestore/indexes.json
+firestore.rules
+package-lock.json
+storage.rules
+.firebaserc
