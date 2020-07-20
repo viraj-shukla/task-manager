@@ -1,38 +1,341 @@
-.App {
-  text-align: center;
+* {
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Nav bars */
+
+/*.nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background-color: #404040;
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 3em;
+}
+  
+.nav li {
+    float: right;
+    clear: right;
+    padding: 1em;
+}
+  
+.nav a {
+    float: right;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+}
+  
+.nav li:hover {
+    background-color: #333333;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.nav a:hover {
+    text-decoration: none;
+}*/
+
+.nav {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    background-color: #404040;
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 3em;
+    justify-content: center;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.nav div {
+    padding: 1em;
+}
+.nav div.right {
+    align-items: flex-end;
+    clear: both;
 }
 
-.App-link {
-  color: #61dafb;
+.nav div.left {
+    align-items: flex-start;
+    clear: both;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.nav div.center-separator {
+    justify-content: center;
+}
+
+.nav a {
+    color: white;
+    text-align: center;
+    text-decoration: none;
+}
+
+/* Task view */
+
+.content-container {
+    position: absolute;
+    top: 50px;
+    bottom: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.cols-container {
+    list-style: none;
+    display: flex;
+    flex-wrap: nowrap;
+    
+    /*position: absolute;
+    top: 50px;
+    bottom: 0;
+    margin: 0;
+    padding: 0;*/
+    box-sizing: border-box;
+}
+  
+.cols-container li {
+    float: left;
+    width: 35ch;
+    padding: 15px 5px 15px 5px;
+    margin: 10px 1px 10px 1px;
+    flex: 0 0 auto;
+}
+
+.col {
+    margin: 5px;
+    display: inline-block;
+}
+
+.subject-name {
+    background-color: #a1a1a1;
+    padding: 10px;
+    border-radius: 2px;
+}
+
+.subject-add a {
+    text-decoration: none;
+}
+.subject-add a:hover {
+    text-decoration: none;
+}
+
+.tasks-container {
+    background-color: #d4d4d4;
+    overflow: hidden;
+}
+
+.quicktask-container {
+    background-color: #d4d4d4;
+    padding: 0.5em 0.5em 0.5em 0.5em;
+    overflow-wrap: normal;
+}
+div.quicktask-container {
+    white-space: pre;
+}
+
+button.btn-quicktask {
+    background-color: #2a64e2a8;
+    font-size: 14px;
+    vertical-align: top;
+    align-items: center;
+    padding: 0.2em 0.5em 0.2em 0.5em;
+    border: 0px;
+    border-radius: 2px;
+    float: right;
+    clear: right;
+}
+
+button.btn-quicktask:hover {
+    background-color: #2152bbb6;
+}
+
+button.btn-quicktask:focus {
+    outline: none;
+}
+
+textarea#quicktask-area {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    border: 0px;
+    background-color: #d4d4d4;
+    padding: 2px;
+}
+
+textarea#quicktask-area:focus {
+    border: 0px;
+    outline: none;
+    background-color: #dbdbdb;
+}
+
+.task {
+    background-color: #ebebeb;
+    color: black;
+    padding: 0.25em 0.5em 0.25em 0.5em;
+    margin: 0.5em;
+    z-index: 1;
+    border-radius: 2px;
+    box-shadow: 1px 1px 1px #d7d7d7;
+    overflow-wrap: normal;
+}
+
+.priority1 {
+    background-color: #ed4c2f;
+}
+
+.priority2 {
+    background-color: #f1da0b;
+}
+
+.priority3 {
+    background-color: #1dc434;
+}
+
+.priority4 {
+    background-color: #ebebeb;
+}
+
+div.task:hover {
+    transform: scale(1.02);
+}
+
+.add-task {
+    background-color: inherit;
+}
+
+.tasks-container a {
+    text-decoration: none;
+}
+
+.tasks-container a:hover {
+    text-decoration: none;
+}
+
+/* Edit/add header */
+
+.edit-add-container {
+    margin: 10px 10px 10px 10px;
+}
+
+.buttons-container {
+    display: inline-block;
+    height: 3em;
+    overflow: hidden;
+}
+
+a.buttons-container {
+    text-decoration: none;
+}
+
+#back-icon {
+    width: 3em;
+    height: 3em;
+}
+
+button.btn {
+    background-color: #2a64e2a8;
+    vertical-align: top;
+    align-items: center;
+    height: 2em;
+    margin: 0.5em 0em 0.5em 1em;
+    padding: 0.1em 0.5em 0.1em 0.5em;
+}
+
+button.btn:hover {
+    background-color: #2152bbb6;
+}
+
+.edit-details-container {
+    margin-left: 20px;
+    display: block;
+}
+
+#name-input {
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    font-size: 30px;
+    width: 80%;
+    padding: 5px;
+}
+
+.priority-container {
+    margin-top: 20px;
+    margin-left: 5px;
+    font-size: 16px;
+}
+
+.datetime-container {
+    margin-top: 20px;
+    margin-left: 5px;
+}
+
+.description-container {
+    margin-top: 20px;
+    margin-left: 5px;
+}
+#description-area {
+    background-color: #bdbcbc;
+    border-radius: 2px;
+    border: 0px;
+    padding: 5px;
+}
+
+/* List projects */
+.list-projects-container-div {
+    width: 50%;
+    margin: 0 auto;
+    font-size: 32px;
+}
+
+div.list-projects-container-div {
+    margin-top: 1em;
+}
+
+.project-listing {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.list-projects-container-span {
+    display: inline-block;
+    width: 100%;
+    vertical-align: center;
+}
+
+b.project-name:hover {
+    font-size: 1.015em;
+    cursor: pointer;
+}
+
+b.project-name-add:hover .add-icon {
+    transform: scale(1.1);
+}
+
+.trash-icon {
+    width: 10%;
+    color: #da0000;
+    float: right;
+    font-size: 2px;
+    max-height: 36px;
+    vertical-align: center;
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+}
+
+svg.trash-icon:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.add-project {
+    margin-top: 35px;
+}
+
+.add-icon {
+    width: 10%;
+    color: #16b601;
+    float: left;
+    max-height: 30px;
+    vertical-align: center;
+    margin: 0.25em 0.25em 0.25em 0em;
 }
