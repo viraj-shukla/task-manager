@@ -46,32 +46,40 @@ class Login extends React.Component {
 
     render() {
         return (
-            <div class="login-form">
-                <h1>Task Manager</h1>
-                <h2>Log In</h2>
-                <form onSubmit={this.handleSubmit}>
-                    <label htmlFor="email" class="form-input">Email</label><br/>
-                    <input 
-                        type="text"
-                        id="email"
-                        name="email"
-                        value={this.state.email}
-                        onChange={this.handleChange}
-                    /><br/>
+            <div>
+                <h1 class="login-center-text">Lazuli Task Manager</h1>
+                <h2 class="login-center-text">Log In</h2>
+            
+                <div class="login-form">
+                    
+                    <form onSubmit={this.handleSubmit}>
+                        <label htmlFor="email" class="form-label">Email:</label><br/>
+                        <input 
+                            type="text"
+                            class="input-text"
+                            id="email"
+                            name="email"
+                            value={this.state.email}
+                            onChange={this.handleChange}
+                        /><br/>
 
-                    <label htmlFor="password" class="form-input">Password</label><br/>
-                    <input 
-                        type="password" 
-                        id="password"
-                        name="password"
-                        value={this.state.password}
-                        onChange={this.handleChange}
-                    /><br/>
+                        <label htmlFor="password" class="form-label">Password:</label><br/>
+                        <input 
+                            type="password" 
+                            class="input-text"
+                            id="password"
+                            name="password"
+                            value={this.state.password}
+                            onChange={this.handleChange}
+                        /><br/>
 
-                    <button type="submit">
-                        Log In
-                    </button>
-                </form>
+                        <label class="form-label">Don't have an account? <Link to='/signup'>Sign up</Link></label><br/>
+
+                        <button type="submit" class="form-btn">
+                            Log In
+                        </button>
+                    </form>
+                </div>
             </div>
         )
     }

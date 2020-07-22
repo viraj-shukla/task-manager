@@ -29,7 +29,9 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(bodyParser.text());
 
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const { user } = require('firebase-functions/lib/providers/auth');
+const { auth } = require('firebase-admin');
 app.use(cookieParser())
 
 /*
@@ -86,6 +88,9 @@ app.post('/get-project', addHeaders, (req, res) => {
             .catch(err => res.json({ error: err.code }))
 
     }
+    else {
+        return res.json({ error: 'invalid user' })
+    }
     
 })
 
@@ -94,6 +99,13 @@ app.post('/add-project', addHeaders, (req, res) => {
     let reqBody = JSON.parse(req.body)
     let projectRef = db.collection('projects').doc()
     let projectId = projectRef.id
+
+    let priorityColors = {
+        "1": "#ed4c2f",
+        "2": "#f1da0b",
+        "3": "#1dc434",
+        "4": "#ebebeb"
+    }
 
     
     // Update user's project fields & add project
@@ -110,6 +122,7 @@ app.post('/add-project', addHeaders, (req, res) => {
                 id: projectId,
                 users: [],
                 subjects: [],
+                priorityColors,
                 quickTasks: ''
             })
             .then(() => {
@@ -185,7 +198,10 @@ app.post('/list-projects', addHeaders, (req, res) => {
                     .then(querySnapshot => {
                         projectData = { projects: [] }
                         querySnapshot.forEach(projectDoc => {
-                            projectData.projects.unshift({ name: projectDoc.data().name, id: projectDoc.data().id })
+                            projectData.projects.unshift({ 
+                                name: projectDoc.data().name, 
+                                id: projectDoc.data().id 
+                            })
                             console.log(projectData.projects)
                         })
                         res.json(projectData)
@@ -417,7 +433,7 @@ app.post('/signup', addHeaders, (req, res) => {
 })
 
 
-// Login route
+// User routes
 app.post('/login', addHeaders, (req, res) => {
     const user = JSON.parse(req.body)
 
@@ -451,12 +467,79 @@ app.post('/login', addHeaders, (req, res) => {
         .catch(err => res.json({ error: err.code }))
 })
 
-// Sign out
-app.post('/logout', (req, res) => {
+app.get('/logout', (req, res) => {
     firebase.auth().signOut()
-        .catch(err => {
-            return res.json({ err: err.code })
-        })
+        .then(() => res.json({ status: 'success' }))
+        .catch(err => res.json({ err: err.code }))
+})
+
+app.post('/edit-user-name', addHeaders, (req, res) => {
+    let reqBody = JSON.parse(req.body)
+
+    if (currentUser) {
+        let uid = currentUser.uid
+        db.collection('users').doc(uid).get()
+            .then(doc => {
+                if (reqBody.oldFirstName != doc.data().firstName || 
+                    reqBody.oldLastName != doc.data().lastName) {
+                    return res.json({ error: 'invalid-old-names' })
+                }
+                admin.firestore().collection('users').doc(uid).update({
+                    firstName: reqBody.newFirstName,
+                    lastName: reqBody.newLastName
+                })
+                    .then(() => res.json({ success: 'success' }))
+                    .catch(err => res.json({ error: err.code }))
+            })
+            .catch(err => res.json({ error: err.code }))
+    }
+})
+
+app.post('/edit-user-email', addHeaders, (req, res) => {
+    let reqBody = JSON.parse(req.body)
+
+    if (currentUser) {
+        let uid = currentUser.uid
+        if (reqBody.oldEmail != currentUser.email) {
+            return res.json({ error: 'invalid-old-email' })
+        }
+        currentUser.updateEmail(reqBody.newEmail)
+            .then(() => {
+                admin.firestore().collection('users').doc(uid).update({
+                    email: reqBody.newEmail
+                })
+                    .then(() => res.json({ status: 'success' }))
+                    .catch(err => res.json({ error: err.code }))
+            })
+            .catch(err => res.json({ error: err.code }))
+    }
+})
+
+app.post('/edit-user-password', addHeaders, (req, res) => {
+    let reqBody = JSON.parse(req.body)
+
+    if (currentUser) {
+        let uid = currentUser.uid
+        if (reqBody.oldPassword != currentUser.password) {
+            return res.json({ error: 'invalid-old-password' })
+        }
+        currentUser.updatePassword(reqBody.newPassword)
+            .then(() => {
+                auth.sendPasswordResetEmail(currentUser.email)
+                    .then(() => res.json({ status: 'success' }))
+                    .catch(err => res.json({ error: err.code }))
+            })
+            .then(() => res.json({ status: 'success' }))
+            .catch(err => res.json({ error: err.code }))
+    }
+})
+
+app.post('/delete-user', addHeaders, (req, res) => {
+    if (currentUser) {
+        currentUser.delete()
+            .then(() => res.json({ status: 'success' }))
+            .catch(err => res.json({ error: err.code }))
+    }
 })
 
 exports.api = functions.https.onRequest(app)

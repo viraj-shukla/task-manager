@@ -24,14 +24,20 @@ import TaskChart from './TaskChart'
 
 /*
   TODO:
-  - Create daily tasks
-  - Create list-projects page & route
-  - Create settings page & routes
-  - Handle logout in navbar
-  - Setup home page
-  - Add due dates to task view
-  - Set due date reminders
-  - Auto-change priority by due date
+  ** Fix content height from navbar
+  ** Shift subjects sideways
+  ** Quick tasks - fix height issue
+  ** Fix list-projects project deletion
+  ** Test settings page
+  ** Style task forms (name, priority)
+  ** Handle non-authentication in backend
+  ** Handle logout in navbar
+  ** Add due dates to task view
+  ** Login/signup error handling
+  * Make priority values/colors dynamic, and changeable in project edit
+  * Add sign up button to home page
+  * Set due date reminders
+  * Auto-change priority by due date
 */
 
 function App() {

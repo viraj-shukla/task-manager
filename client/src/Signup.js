@@ -53,56 +53,68 @@ class Signup extends React.Component {
     render() {
         return (
             <div>
-                <form onSubmit={this.handleSubmit}>
-                    <label htmlFor="firstName">First Name</label><br/>
-                    <input 
-                        type="text" 
-                        id="firstName"
-                        name="firstName"
-                        value={this.state.firstName}
-                        onChange={this.handleChange}
-                    /><br/><br/>
+                <h1 class="login-center-text">Lazuli Task Manager</h1>
+                <h2 class="login-center-text">Sign Up</h2>
 
-                    <label htmlFor="lastName">Last Name</label><br/>
-                    <input 
-                        type="text" 
-                        id="lastName"
-                        name="lastName"
-                        value={this.state.lastName}
-                        onChange={this.handleChange}
-                    /><br/><br/>
+                <div class="login-form">
+                    <form onSubmit={this.handleSubmit}>
+                        <label htmlFor="firstName" class="form-label">First name:</label><br/>
+                        <input 
+                            type="text" 
+                            class="input-text"
+                            id="firstName"
+                            name="firstName"
+                            value={this.state.firstName}
+                            onChange={this.handleChange}
+                        /><br/>
 
-                    <label htmlFor="email">Email</label><br/>
-                    <input 
-                        type="text" 
-                        id="email"
-                        name="email"
-                        value={this.state.email}
-                        onChange={this.handleChange}
-                    /><br/><br/>
+                        <label htmlFor="lastName" class="form-label">Last name:</label><br/>
+                        <input 
+                            type="text"
+                            class="input-text"
+                            id="lastName"
+                            name="lastName"
+                            value={this.state.lastName}
+                            onChange={this.handleChange}
+                        /><br/>
 
-                    <label htmlFor="password">Password</label><br/>
-                    <input 
-                        type="password" 
-                        id="password"
-                        name="password"
-                        value={this.state.password}
-                        onChange={this.handleChange}
-                    /><br/><br/>
+                        <label htmlFor="email" class="form-label">Email:</label><br/>
+                        <input 
+                            type="text"
+                            class="input-text"
+                            id="email"
+                            name="email"
+                            value={this.state.email}
+                            onChange={this.handleChange}
+                        /><br/>
 
-                    <label htmlFor="confirmPassword">Confirm Password</label><br/>
-                    <input 
-                        type="password" 
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        value={this.state.confirmPassword}
-                        onChange={this.handleChange}
-                    /><br/><br/>
+                        <label htmlFor="password" class="form-label">Password:</label><br/>
+                        <input 
+                            type="password"
+                            class="input-text"
+                            id="password"
+                            name="password"
+                            value={this.state.password}
+                            onChange={this.handleChange}
+                        /><br/>
 
-                    <button type="submit">
-                        Sign Up
-                    </button>
-                </form>
+                        <label htmlFor="confirmPassword" class="form-label">Confirm Password:</label><br/>
+                        <input 
+                            type="password"
+                            class="input-text"
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            value={this.state.confirmPassword}
+                            onChange={this.handleChange}
+                        /><br/>
+
+                        <label class="form-label">Already have an account? <Link to='/login'>Log in</Link></label><br/>
+
+                        <button type="submit" class="form-btn">
+                            Sign Up
+                        </button>
+                    </form>
+                </div>
             </div>
         )
     }

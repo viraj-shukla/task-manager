@@ -2,70 +2,60 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
+body {
+    background-image: url('./images/what-the-hex.png');
+    background-repeat: repeat;
+}
+
+.below-navbar {
+    margin-top: 4em;
+}
+
 /* Nav bars */
 
-/*.nav {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    background-color: #404040;
-    overflow-x: auto;
-    overflow-y: hidden;
-    height: 3em;
-}
-  
-.nav li {
-    float: right;
-    clear: right;
-    padding: 1em;
-}
-  
-.nav a {
-    float: right;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-}
-  
-.nav li:hover {
-    background-color: #333333;
-}
-
-.nav a:hover {
-    text-decoration: none;
-}*/
-
 .nav {
-    display: inline-block;
+    
+    top: 0;
+    position: fixed;
+    width: 100%;
     margin: 0;
     padding: 0;
     background-color: #404040;
     overflow-x: auto;
     overflow-y: hidden;
     height: 3em;
-    justify-content: center;
+    
+    z-index: 1;
+}
+
+span.nav {
+    display: inline-block;
 }
 
 .nav div {
-    padding: 1em;
+    padding: 0.75em 1em 0.75em 1em;
 }
+
 .nav div.right {
-    align-items: flex-end;
-    clear: both;
+    float: right;
 }
 
 .nav div.left {
-    align-items: flex-start;
-    clear: both;
+    float: left;
 }
 
-.nav div.center-separator {
-    justify-content: center;
+.nav div:hover {
+    background-color: #464646;
 }
 
 .nav a {
     color: white;
     text-align: center;
+    text-decoration: none;
+}
+
+.nav a:hover {
+    color: white;
     text-decoration: none;
 }
 
@@ -73,8 +63,9 @@
 
 .content-container {
     position: absolute;
-    top: 50px;
+    top: 0;
     bottom: 0;
+    width: 100%;
     margin: 0;
     padding: 0;
 }
@@ -83,20 +74,15 @@
     list-style: none;
     display: flex;
     flex-wrap: nowrap;
-    
-    /*position: absolute;
-    top: 50px;
-    bottom: 0;
-    margin: 0;
-    padding: 0;*/
     box-sizing: border-box;
+    padding-left: 5px;
 }
   
 .cols-container li {
     float: left;
     width: 35ch;
     padding: 15px 5px 15px 5px;
-    margin: 10px 1px 10px 1px;
+    margin: 4em 1px 10px 1px;
     flex: 0 0 auto;
 }
 
@@ -256,6 +242,11 @@ button.btn:hover {
     font-size: 30px;
     width: 80%;
     padding: 5px;
+    background-color: #ffffff5f;
+}
+
+#name-input:focus {
+    outline: 0;
 }
 
 .priority-container {
@@ -338,4 +329,134 @@ svg.trash-icon:hover {
     max-height: 30px;
     vertical-align: center;
     margin: 0.25em 0.25em 0.25em 0em;
+}
+
+/* Task chart */
+
+.title-bar {
+    display: flex;
+}
+
+#back-icon-alone {
+    float: left;
+    width: 4em;
+    height: 4em;  
+    margin-left: 0.5em;
+}
+
+.back-icon-alone-settings {
+    display: block;
+    width: 100%;
+}
+
+.chart-title {
+    margin-top: 0.5em;
+    margin-left: 39%;
+    display: block;
+    font-size: 24px;
+}
+
+.chart-container {
+    margin-left: 10%;
+    margin-top: 5px;
+}
+
+
+/* Home page */
+.home-center-text {
+    text-align: center;
+    margin: 0.5em;
+}
+
+
+.home-features-container {
+    display: flex;
+    width: 70%;
+    margin: 2em 12% 2em 12%;
+    padding: 3%;
+    justify-content: space-between;
+    overflow: hidden;
+    clear: both;
+    background-color: #a1a1a199;
+    border-radius: 5px;
+    box-shadow: 0px 0px 1px #a1a1a1;
+}
+
+.home-feature {
+    max-width: 25%;
+    text-align: center;
+    font-weight: bold;
+}
+
+.home-icon {
+    width: 2em;
+    height: 2em;
+    margin-bottom: 1em;
+}
+
+/* User forms */
+
+.login-center-text {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.login-form {
+    text-align: center;
+    margin: 2em 37% 2em 37%;
+    background-color: #a1a1a199;
+    border-radius: 10px;
+}
+
+.login-form-invisible {
+    text-align: center;
+    margin: 1em 37% 2em 37%;
+}
+
+.settings-form {
+    margin: 1em;
+    background-color: #a1a1a199;
+    border-radius: 10px;
+}
+
+.settings-form form {
+    padding: 1em;
+    max-width: 20%;
+}
+
+.login-form form {
+    padding: 5px;
+}
+
+.form-label {
+    margin-top: 1em;
+}
+
+input.input-text {
+    padding: 2px;
+}
+
+input.input-text:focus {
+    outline: 0;
+}
+
+button.form-btn {
+    margin-top: 0.5em;
+    margin-bottom: 1em;
+    background-color: #2a64e2a8;
+    padding: 0.25em 0.5em 0.25em 0.5em;
+    border: 0;
+    border-radius: 2px;
+}
+
+button.btn-below-input {
+    margin-top: 1em;
+}
+
+button.form-btn:hover {
+    background-color: #2152bbb6;
+}
+
+button.form-btn:focus {
+    outline: 0;
 }

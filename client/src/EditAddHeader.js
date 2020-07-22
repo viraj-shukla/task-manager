@@ -7,13 +7,18 @@ import './App.css';
 class EditAddHeader extends React.Component {    
     render() {
         return (
-            <span class="buttons-container">
+            <span class="below-navbar buttons-container">
                 <Link to='/project'>
                     <FontAwesomeIcon id="back-icon" icon={faAngleLeft} size="1x" />
                 </Link>
-                <button class="btn submit-btn" onClick={this.props.handleSave}>
-                    {this.props.saveBtnText}
-                </button>
+                {this.props.saveBtnText ?
+                    (
+                        <button class="btn submit-btn" onClick={this.props.handleSave}>
+                            {this.props.saveBtnText}
+                        </button>
+                    ) :
+                    null
+                }
                 {this.props.deleteBtnText ?
                     (
                         <button class="btn delete-btn" onClick={this.props.handleDelete}>

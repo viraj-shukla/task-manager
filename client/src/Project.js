@@ -88,6 +88,9 @@ class Project extends React.Component {
                     quickTasks: data.project.quickTasks
                 })
             }
+            if (data.error == "invalid user") {
+                this.props.history.push('/')
+            }
         })
     }
 
@@ -95,14 +98,14 @@ class Project extends React.Component {
         let subjects = this.state.project.subjects
         autosize(this.textarea)
         return (
-            <div>
+            <div class="content">
                 <TasksNavBar 
-                    handleLogout={this.handleLogout}
-                    projectId={this.state.project.id}
-                    name={this.state.project.name}
-                />
+                        projectId={this.state.project.id}
+                        name={this.state.project.name}
+                    />
 
                 <div class="content-container">
+                    
                 
                     <ul class="cols-container">
                         <li>
