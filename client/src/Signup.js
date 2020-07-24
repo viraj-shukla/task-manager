@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import api from './api'
 import './App.css';
 
 class Signup extends React.Component {
@@ -9,6 +10,7 @@ class Signup extends React.Component {
         email: '',
         password: '',
         confirmPassword: '',
+        error: ''
     }
 
     handleChange = (event) => {
@@ -18,13 +20,12 @@ class Signup extends React.Component {
     }
 
     handleSubmit = (event) => {
-        fetch('http://localhost:5001/task-manager-ed416/us-central1/api/signup', {
+        fetch(`${api}/signup`, {
             method: 'POST',
             mode: 'cors',
             headers: {
                 "Content-type": "text/plain",
             },
-            //credentials: 'include',
             body: JSON.stringify({
                 firstName: this.state.firstName,
                 lastName: this.state.lastName,
@@ -36,12 +37,39 @@ class Signup extends React.Component {
             .then(res => res.text())
             .then(dataJSON => {
                 let data = JSON.parse(dataJSON)
-                console.log(data)
                 if (!data.error) {
                     this.props.history.push('/add-project')
                 }
+                else {
+                    let errorMsg = ''
+                    switch (data.error) {
+                        case "field-empty":
+                            errorMsg = 'Fields cannot be empty'
+                            break
+                        case 'passwords-unmatched':
+                            errorMsg = 'Passwords do not match'
+                            break
+                        case 'auth/email-already-in-use':
+                            errorMsg = 'Email is already in use'
+                            break
+                        case 'auth/invalid-email':
+                            errorMsg = 'Email is invalid'
+                            break
+                        case 'auth/weak-password':
+                            errorMsg = 'Password is too weak'
+                        default:
+                            errorMsg = 'Signup failed'
+                    }
+                    this.setState({
+                        error: errorMsg
+                    })
+                }
             })
-            .catch(error => console.log(`Error: ${error}`))
+            .catch(error => {
+                this.setState({
+                    error
+                })
+            })
 
         event.preventDefault()
     }
@@ -58,6 +86,16 @@ class Signup extends React.Component {
 
                 <div class="login-form">
                     <form onSubmit={this.handleSubmit}>
+                        {this.state.error != '' ? 
+                            (
+                            <>
+                                <label htmlFor="error" class="form-label form-label-error">{this.state.error}</label>
+                                <br/>
+                            </>
+                            ) :
+                            null
+                        }
+
                         <label htmlFor="firstName" class="form-label">First name:</label><br/>
                         <input 
                             type="text" 

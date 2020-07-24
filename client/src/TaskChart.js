@@ -13,9 +13,9 @@ import {
     BarSeries,
     StripLine
 } from '@syncfusion/ej2-react-charts';
+import api from './api'
 import './App.css';
 import TasksNavBar from './TasksNavBar';
-import EditAddHeader from './EditAddHeader';
 
 class TaskChart extends React.Component {
     state = {
@@ -57,14 +57,8 @@ class TaskChart extends React.Component {
 
     pointRender = (args) => {
         let seriesColor = []
-        /*let colors = {
-            "1": "#ed4c2f",
-            "2": "#f1da0b",
-            "3": "#1dc434",
-            "4": "#ebebeb"
-        }*/
         this.state.tasks.forEach(task => {
-            seriesColor.push(this.state.project.priorityColors[task.priority])
+            seriesColor.push(this.state.project.priorityColors[task.priority].color)
         })
         args.fill = seriesColor[args.point.index]
     }
@@ -88,13 +82,12 @@ class TaskChart extends React.Component {
     }
 
     componentDidMount() {
-        fetch('http://localhost:5001/task-manager-ed416/us-central1/api/get-project', {
+        fetch(`${api}/get-project`, {
             method: 'POST',
             mode: 'cors',
             headers: {
                 "Content-type": "text/plain",
             },
-            //credentials: 'include',
             body: JSON.stringify({
                 foo: 'bar'
             })
@@ -109,7 +102,11 @@ class TaskChart extends React.Component {
                     loaded: true
                 })
             }
+            if (data.error == "invalid user") {
+                this.props.history.push('/login')
+            }
         })
+        .catch(error => console.log(error))
     }
 
     content = () => (
@@ -140,7 +137,7 @@ class TaskChart extends React.Component {
     render() {
         return (
             <div>
-                <TasksNavBar handleLogout={this.handleLogout} />
+                <TasksNavBar />
 
                 <div class="below-navbar">
                     <span class="title-bar">

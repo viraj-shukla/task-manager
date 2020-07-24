@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import api from './api'
 import './App.css';
 import EditAddHeader from './EditAddHeader';
 import TasksNavBar from './TasksNavBar'
@@ -13,6 +13,9 @@ class EditSubject extends React.Component {
     }
 
     componentDidMount() {
+        if (!this.props.location.projectId) {
+            this.props.history.push('/login')
+        }
         this.setState({
             projectId: this.props.location.projectId,
             subjectId: this.props.location.subjectId,
@@ -27,7 +30,7 @@ class EditSubject extends React.Component {
     }
 
     handleSave = () => {
-        fetch('http://localhost:5001/task-manager-ed416/us-central1/api/edit-subject', {
+        fetch(`${api}/edit-subject`, {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -43,16 +46,15 @@ class EditSubject extends React.Component {
             .then(res => res.text())
             .then(dataJSON => {
                 let data = JSON.parse(dataJSON)
-                console.log(data)
                 if (!data.error) {
                     this.props.history.push('/project')
                 }
             })
-            .catch(error => console.log(`Error: ${error}`))
+            .catch(error => console.log(error))
     }
 
     handleDelete = () => {
-        fetch('http://localhost:5001/task-manager-ed416/us-central1/api/delete-subject', {
+        fetch(`${api}/delete-subject`, {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -67,12 +69,11 @@ class EditSubject extends React.Component {
             .then(res => res.text())
             .then(dataJSON => {
                 let data = JSON.parse(dataJSON)
-                console.log(data)
                 if (!data.error) {
                     this.props.history.push('/project')
                 }
             })
-            .catch(error => console.log(`Error: ${error}`))
+            .catch(error => console.log(error))
     }
 
     render() {

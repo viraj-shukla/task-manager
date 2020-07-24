@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import api from './api'
 import './App.css';
 import EditAddHeader from './EditAddHeader';
 import TasksNavBar from './TasksNavBar'
@@ -12,7 +12,22 @@ class AddTask extends React.Component {
         name: '',
         priority: "3",
         description: '',
-        due: null
+        due: null,
+        loaded: false
+    }
+
+    componentDidMount() {
+        if (!this.props.location.projectId) {
+            this.props.history.push('/login')
+        }
+        else {
+            this.setState({
+                projectId: this.props.location.projectId,
+                subjectId: this.props.location.subjectId,
+                due: new Date(),
+                loaded: true
+            })
+        }
     }
 
     handleChange = (event) => {
@@ -22,7 +37,7 @@ class AddTask extends React.Component {
     }
 
     handleSubmit = () => {
-        fetch('http://localhost:5001/task-manager-ed416/us-central1/api/add-task', {
+        fetch(`${api}/add-task`, {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -41,41 +56,37 @@ class AddTask extends React.Component {
             .then(res => res.text())
             .then(dataJSON => {
                 let data = JSON.parse(dataJSON)
-                console.log(data)
                 if (!data.error) {
                     this.props.history.push('/project')
                 }
             })
-            .catch(error => console.log(`Error: ${error}`))
+            .catch(error => console.log(error))
     }
 
-    componentDidMount() {
-        this.setState({
-            projectId: this.props.location.projectId,
-            subjectId: this.props.location.subjectId,
-            due: new Date()
-        })
-    }
+    content = () => (
+        <div class="edit-add-container">
+            <EditAddHeader 
+                saveBtnText="Add Task" 
+                handleSave={this.handleSubmit}
+            />
+
+            <TaskForm
+                name={this.state.name}
+                priority={this.state.priority}
+                priorityColors={this.props.location.priorityColors}
+                due={this.state.due}
+                description={this.state.description}
+                handleChange={this.handleChange}
+            /> 
+        </div>
+    )
 
     render() {
         return (
             <div>
-                <TasksNavBar handleLogout={this.handleLogout} />
+                <TasksNavBar />
 
-                <div class="edit-add-container">
-                    <EditAddHeader 
-                        saveBtnText="Add Task" 
-                        handleSave={this.handleSubmit}
-                    />
-
-                    <TaskForm
-                        name={this.state.name}
-                        priority={this.state.priority}
-                        due={this.state.due}
-                        description={this.state.description}
-                        handleChange={this.handleChange}
-                    /> 
-                </div>
+                {this.state.loaded ? this.content() : null}
             </div>
             
         )

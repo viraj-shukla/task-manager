@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import api from './api'
 import './App.css';
 
 class TasksNavBar extends React.Component {
     
     handleLogout = (event) => {
-        fetch('http://localhost:5001/task-manager-ed416/us-central1/api/logout', {
+        fetch(`${api}/logout`, {
             method: 'GET',
             mode: 'cors',
         })
@@ -16,24 +17,16 @@ class TasksNavBar extends React.Component {
                     this.props.history.push('/')
                 }
             })
-            .catch(error => console.log(`Error: ${error}`))
+            .catch(error => { this.props.history.push('/') })
     }
 
     render() {
         return (
-            /*<ul class="nav">
-                <Link to={'/'}><li>Settings</li></Link>
-                <Link to={'/'} onClick={this.props.handleLogout}><li>Log Out</li></Link>                
-            </ul>*/
             <span class="nav">
-                <Link to={{
-                    pathname: '/edit-project',
-                    projectId: this.props.projectId,
-                    name: this.props.name
-                }}>
+                <Link to={'/edit-project'}>
                     <div class="left">
                         Edit Project
-                        </div>
+                    </div>
                 </Link>
             
                 <Link to={'/list-projects'}>
@@ -68,6 +61,3 @@ class TasksNavBar extends React.Component {
 }
 
 export default TasksNavBar;
-
-//<li><Link to={'/login'}>Log In</Link></li>
-//<li><Link to={'/signup'}>Sign Up</Link></li>

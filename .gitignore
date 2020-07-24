@@ -4,6 +4,7 @@ clientold/
 firebase.json
 firestore/indexes.json
 firestore.rules
+firebase-debug.log
 package-lock.json
 storage.rules
 .firebaserc

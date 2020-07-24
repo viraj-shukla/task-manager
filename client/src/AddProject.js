@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import api from './api'
 import './App.css';
 import TasksNavBar from './TasksNavBar'
 import EditAddHeader from './EditAddHeader';
@@ -17,7 +17,7 @@ class AddProject extends React.Component {
     }
 
     handleSubmit = (event) => {
-        fetch('http://localhost:5001/task-manager-ed416/us-central1/api/add-project', {
+        fetch(`${api}/add-project`, {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -31,12 +31,14 @@ class AddProject extends React.Component {
             .then(res => res.text())
             .then(dataJSON => {
                 let data = JSON.parse(dataJSON)
-                console.log(data)
                 if (!data.error) {
                     this.props.history.push('/project')
                 }
+                if (data.error == "invalid user") {
+                    this.props.history.push('/login')
+                }
             })
-            .catch(error => console.log(`Error: ${error}`))
+            .catch(error => console.log(error))
 
         event.preventDefault()
     }
@@ -44,7 +46,7 @@ class AddProject extends React.Component {
     render() {
         return (
             <div>
-                <TasksNavBar handleLogout={this.handleLogout} />
+                <TasksNavBar />
 
                 <div class="edit-add-container">
                     <EditAddHeader 

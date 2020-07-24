@@ -15,10 +15,14 @@ firebase.initializeApp(firebaseConfig);
 const express = require('express');
 const app = express();
 
+const testOrigin = 'http://localhost:3000'
+const prodOrigin = 'https://task-manager-ed416.web.app'
+const clientOrigin = prodOrigin
+
 const cors = require('cors');
 const corsOptions = {
     credentials: true,
-    origin: 'http://localhost:3000'
+    origin: clientOrigin
 };
 app.use(cors(corsOptions));
 
@@ -48,7 +52,7 @@ firebase.auth().onAuthStateChanged(user => {
 
 // Set headers for CORS compliance
 addHeaders = (req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
+    res.setHeader('Access-Control-Allow-Origin', clientOrigin)
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST')
     res.setHeader('Access-Control-Allow-Credentials', 'true')
     next()
@@ -56,7 +60,7 @@ addHeaders = (req, res, next) => {
 
 // Generate random 20-character ID
 genRandomId = () => {
-    chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    let chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
     let id = ""
     for (let i = 0; i < 20; i++) {
@@ -73,63 +77,107 @@ app.post('/get-project', addHeaders, (req, res) => {
     // Get user's recent project ID, & get that project
     if (currentUser) {
         let uid = currentUser.uid
-        console.log(uid)
         
         db.collection('users').doc(uid).get()
             .then(doc => {
                 let projectId = doc.data().recentProject
-                console.log(projectId)
                 db.collection('projects').doc(projectId).get()
                     .then(doc => {
-                        let projectData = { project: doc.data() }
-                        return res.json(projectData)
+                        let projectData = doc.data()
+                        let subjectData = projectData.subjects
+
+                        // If due data is 2 days away or less, make high priority
+                        //      & update project in db
+                        let currentDate = new Date()
+                        let isProjectModified = false
+                        let taskFunc = (task) => {
+                            //let taskDue = Date.parse()
+                            if (Date.parse(task.due) - currentDate.getTime() < 1000 * 60 * 60 * 24 * 2) {
+                                let newTask = task
+                                newTask.priority = "1"
+                                isProjectModified = true
+                                return newTask
+                            }
+                            else {
+                                return task
+                            }
+                        }
+                        let subjectFunc = (subject) => {
+                            subject.tasks.forEach(taskFunc)
+                        }
+                        subjectData.forEach(subjectFunc)
+
+                        if (isProjectModified) {
+                            projectData.subjects = subjectData
+                            db.collection('projects').doc(projectId).update({
+                                subjects: subjectData
+                            })
+                        }
+
+
+                        let projectDataObj = { project: projectData }
+                        return res.json(projectDataObj)
                     })
             })
             .catch(err => res.json({ error: err.code }))
 
     }
     else {
-        return res.json({ error: 'invalid user' })
+        return res.status(403).json({ error: 'invalid user' })
     }
     
 })
 
 app.post('/add-project', addHeaders, (req, res) => {
-    // Initialize request body & new project doc
-    let reqBody = JSON.parse(req.body)
-    let projectRef = db.collection('projects').doc()
-    let projectId = projectRef.id
-
-    let priorityColors = {
-        "1": "#ed4c2f",
-        "2": "#f1da0b",
-        "3": "#1dc434",
-        "4": "#ebebeb"
-    }
-
-    
-    // Update user's project fields & add project
     if (currentUser) {
+        // Initialize request body & new project doc
+        let reqBody = JSON.parse(req.body)
+        let projectRef = db.collection('projects').doc()
+        let projectId = projectRef.id
+
+        let priorityColors = {
+            "1": {
+                color: "#ed4c2f",
+                name: "High Priority"
+            },
+            "2": {
+                color: "#f1da0b",
+                name: "Medium Priority"
+            },
+            "3": {
+                color: "#1dc434",
+                name: "Low Priority"
+            },
+            "4": {
+                color: "#ebebeb",
+                name: "No Priority"
+            }
+        }
+
+        
+        // Update user's project fields & add project
         let uid = currentUser.uid
-        console.log(uid)
         admin.firestore().collection('users').doc(uid).update({
             recentProject: projectId,
             projectIds: admin.firestore.FieldValue.arrayUnion(projectId)
         })
-        .then(() => {
-            projectRef.set({
-                name: reqBody.name,
-                id: projectId,
-                users: [],
-                subjects: [],
-                priorityColors,
-                quickTasks: ''
-            })
             .then(() => {
-                res.json({ success: 'success' })
+                projectRef.set({
+                    name: reqBody.name,
+                    id: projectId,
+                    users: [],
+                    subjects: [],
+                    priorityColors,
+                    quickTasks: ''
+                })
+                .then(() => {
+                    res.json({ success: 'success' })
+                })
             })
-        })
-        .catch(err => res.json({ error: err.code }))
+            .catch(err => res.json({ error: err.code }))
+    }
+    else {
+        return res.status(403).json({ error: 'invalid user' })
     }
 })
 
@@ -187,28 +235,52 @@ app.post('/delete-project', addHeaders, (req, res) => {
     }
 })
 
-app.post('/list-projects', addHeaders, (req, res) => {
+app.post('/select-project', addHeaders, (req, res) => {
+    let reqBody = JSON.parse(req.body)
+
+    // Set user's recent project
     if (currentUser) {
-        // Delete nested collections
+        let uid = currentUser.uid
+        admin.firestore().collection('users').doc(uid).update({
+            recentProject: reqBody.projectId
+        })
+            .then(() => res.json({ success: 'success' }))
+            .catch(err => res.json({ error: err.code }))
+    }
+})
+
+app.post('/list-projects', addHeaders, (req, res) => {
+    // Get user's project list, and fetch projects' info
+    if (currentUser) {
         let uid = currentUser.uid
         admin.firestore().collection('users').doc(uid).get()
             .then(userDoc => {
                 let projectIdList = userDoc.data().projectIds
+                let recentProjectId = userDoc.data().recentProject
+
                 db.collection('projects').where("id", "in", projectIdList).get()
                     .then(querySnapshot => {
-                        projectData = { projects: [] }
+                        let projectData = { projects: [] }
+                        let recentProjectObj = {}
                         querySnapshot.forEach(projectDoc => {
-                            projectData.projects.unshift({ 
+                            projectObj = {
                                 name: projectDoc.data().name, 
                                 id: projectDoc.data().id 
-                            })
-                            console.log(projectData.projects)
+                            }
+                            projectDoc.data().id == recentProjectId ?
+                                recentProjectObj = projectObj :
+                                projectData.projects.unshift(projectObj)
                         })
+                        // Recent project is first element in project array
+                        projectData.projects.unshift(recentProjectObj)
                         res.json(projectData)
                     })
                     .catch(err => res.json({ error: err.code }))
             })
             .catch(err => res.json({ error: err.code }))
+    }
+    else {
+        return res.status(403).json({ error: 'invalid user' })
     }
 })
 
@@ -250,6 +322,16 @@ app.post('/edit-subject', addHeaders, (req, res) => {
             .then(() => res.json({ success: 'success' }))
             .catch(err => res.json({ error: err.code }))
         })
+        .catch(err => res.json({ error: err.code }))
+})
+
+app.post('/edit-subject-order', addHeaders, (req, res) => {
+    let reqBody = JSON.parse(req.body)
+
+    db.collection('projects').doc(reqBody.projectId).update({
+        subjects: reqBody.subjects
+    })
+        .then(() => res.json({ success: 'success' }))
         .catch(err => res.json({ error: err.code }))
 })
 
@@ -314,7 +396,6 @@ app.post('/edit-task', addHeaders, (req, res) => {
         description: reqBody.description,
         due: reqBody.due
     }
-    console.log(newTask)
 
     db.collection('projects').doc(reqBody.projectId).get()
         .then(doc => {
@@ -383,11 +464,20 @@ app.post('/signup', addHeaders, (req, res) => {
     const newUser = JSON.parse(req.body)
     let errors = {};
 
+    for (let field of ['firstName', 'lastName', 'email', 'password', 'confirmPassword']) {
+        if (newUser[field] === '' || !newUser[field]) {
+            return res.status(400).json({ error: 'field-empty' })
+        }
+    }
+
+    if (newUser.password != newUser.confirmPassword) {
+        return res.status(400).json({ error: "passwords-unmatched" })
+    }
+
     var userVar;
     //var userID;
     firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password)
         .then(userCred => {
-            console.log('got here 2')
             return userCred.user
         })
         .then(user => {
@@ -401,35 +491,11 @@ app.post('/signup', addHeaders, (req, res) => {
                 projectIds: [],
                 recentProject: null
             }
-
             db.collection('users').doc(user.uid).set(userCreds)
-
-            console.log(`${currentUser.uid}`)
 
             res.json({ success: 'success' })
         })
-        /*.then(() => {
-            userVar.getIdTokenResult(true)
-                .then(tokenResult => {
-                    var token = tokenResult.token
-                    console.log(`token: ${token}`)
-                    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
-                    res.setHeader('Access-Control-Allow-Methods', 'GET, POST')
-                    res.setHeader('Access-Control-Allow-Credentials', 'true')
-                    res.setHeader('Set-Cookie', `token=${token}; HttpOnly; Secure; SameSite=None`)
-                    return res.json({ token })
-                })
-                .catch(err => res.json({error: err.code }))
-        })*/
-        .catch(err => {
-            message = err.code
-            if (message === 'auth/email-already-in-use') {
-                res.json({ email: 'Email already in use' })
-            }
-            else {
-                res.json({ message })
-            }
-        })
+        .catch(err => res.json({ error: err.code }))
 })
 
 
@@ -437,30 +503,13 @@ app.post('/signup', addHeaders, (req, res) => {
 app.post('/login', addHeaders, (req, res) => {
     const user = JSON.parse(req.body)
 
-    firebase.auth().signInWithEmailAndPassword(user.email, user.password)
-        /*.then(userCred => {
-            userCred.user.getIdTokenResult(true)
-                .then(tokenResult => {
-                    var token = tokenResult.token
-                    console.log(`token: ${token}`)
-                    return res.json({ token })
-                })
-                .catch(err => res.json({error: err.code }))
-        })
-        .then(user => {
-            firebase.auth().getIdToken(true)
-                .then(token => {
-                    //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
-                    //res.setHeader('Access-Control-Allow-Methods', 'GET, POST')
-                    //res.setHeader('Access-Control-Allow-Credentials', 'true')
-                    //res.setHeader('Access-Control-Allow-Headers', 'true')
-                    //let options = {httpOnly: true, secure: true, sameSite: 'none'}
-                    //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
-                    res.setHeader('Set-Cookie', `token=${token}; HttpOnly; Secure; SameSite=None`)
+    for (let field of ['email', 'password']) {
+        if (user[field] === '' || !user[field]) {
+            return res.status(400).json({ error: 'field-empty' })
+        }
+    }
 
-                    return res.json({ token })
-                })
-        })*/
+    firebase.auth().signInWithEmailAndPassword(user.email, user.password)
         .then(() => {
             res.json({ success: 'success' })
         })

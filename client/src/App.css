@@ -91,10 +91,58 @@ span.nav {
     display: inline-block;
 }
 
+.subject-move-span {
+    display: none;
+    justify-content: right;
+    transform: scale(1.01)
+}
+
+.subject-move-btn {
+    background-color: #d7d7d7;
+    font-size: 16px;
+    border: 0;
+}
+
+.subject-move-btn-left {
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+
+.subject-move-btn-right {
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+
+.subject-move-btn:hover {
+    background-color: #cfcfcf;
+}
+
+.subject-move-btn:focus {
+    outline: 0;
+}
+
 .subject-name {
     background-color: #a1a1a1;
     padding: 10px;
     border-radius: 2px;
+}
+
+a.subject-name-link {
+    color: black;
+    text-decoration: none;
+}
+
+a.subject-name-link:hover {
+    color: black;
+    text-decoration: none;
+}
+
+div.subject-name:hover {
+    transform: scale(1.01);
+}
+
+div.subject-name-container:hover .subject-move-span {
+    display: flex;
 }
 
 .subject-add a {
@@ -151,12 +199,13 @@ textarea#quicktask-area:focus {
     border: 0px;
     outline: none;
     background-color: #dbdbdb;
+    padding: 5px;
 }
 
 .task {
     background-color: #ebebeb;
     color: black;
-    padding: 0.25em 0.5em 0.25em 0.5em;
+    padding: 0.30em 0.5em 0em 0.5em;
     margin: 0.5em;
     z-index: 1;
     border-radius: 2px;
@@ -164,24 +213,30 @@ textarea#quicktask-area:focus {
     overflow-wrap: normal;
 }
 
-.priority1 {
-    background-color: #ed4c2f;
-}
-
-.priority2 {
-    background-color: #f1da0b;
-}
-
-.priority3 {
-    background-color: #1dc434;
-}
-
-.priority4 {
-    background-color: #ebebeb;
-}
-
 div.task:hover {
     transform: scale(1.02);
+}
+
+.task-span {
+    width: 100%;
+}
+
+span.task-span {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+
+.task-span-name {
+    float: left;
+    max-width: 80%;
+    overflow-wrap: normal;
+}
+
+.task-span-due {
+    float: right;
+    max-width: 20%;
+    font-weight: bold;
 }
 
 .add-task {
@@ -255,6 +310,20 @@ button.btn:hover {
     font-size: 16px;
 }
 
+select.priority-select {
+    border-radius: 2px;
+    text-indent: 2px;
+    max-height: calc(1.2em + 6px);
+    height: calc(1.2em + 6px);
+}
+
+div.priority-option-div {
+    appearance: none;
+    text-indent: 3px;
+    padding-top: 3px;
+    margin: 3px;
+}
+
 .datetime-container {
     margin-top: 20px;
     margin-left: 5px;
@@ -274,12 +343,11 @@ button.btn:hover {
 /* List projects */
 .list-projects-container-div {
     width: 50%;
-    margin: 0 auto;
+    margin-top: 2.5em;
+    margin-left: 25%;
+    margin-right: 25%;
+    justify-content: space-evenly;
     font-size: 32px;
-}
-
-div.list-projects-container-div {
-    margin-top: 1em;
 }
 
 .project-listing {
@@ -383,7 +451,7 @@ svg.trash-icon:hover {
 }
 
 .home-feature {
-    max-width: 25%;
+    max-width: 20%;
     text-align: center;
     font-weight: bold;
 }
@@ -430,6 +498,11 @@ svg.trash-icon:hover {
 
 .form-label {
     margin-top: 1em;
+}
+
+.form-label-error {
+    color: #e64545;
+    font-weight: bold;
 }
 
 input.input-text {

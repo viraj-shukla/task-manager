@@ -2,6 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
+import api from './api'
 import './App.css';
 import TasksNavBar from './TasksNavBar'
 
@@ -27,7 +28,7 @@ class Settings extends React.Component {
     }
 
     handleSubmitName = (event) => {
-        fetch('http://localhost:5001/task-manager-ed416/us-central1/api/edit-user-name', {
+        fetch(`${api}/edit-user-name`, {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -51,18 +52,18 @@ class Settings extends React.Component {
                 else {
                     if (data.error == "invalid-old-names") {
                         this.setState({
-                            nameFormStatus: "Old first or last name is invalid!"
+                            nameFormStatus: "Old first or last name is invalid"
                         })
                     }
                 }
             })
-            .catch(error => console.log(`Error: ${error}`))
+            .catch(error => console.log(error))
 
         event.preventDefault()
     }
 
     handleSubmitEmail = (event) => {
-        fetch('http://localhost:5001/task-manager-ed416/us-central1/api/edit-user-email', {
+        fetch(`${api}/edit-user-email`, {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -89,13 +90,13 @@ class Settings extends React.Component {
                     }
                 }
             })
-            .catch(error => console.log(`Error: ${error}`))
+            .catch(error => console.log(error))
 
         event.preventDefault()
     }
 
     handleSubmitPassword = (event) => {
-        fetch('http://localhost:5001/task-manager-ed416/us-central1/api/edit-user-password', {
+        fetch(`${api}/edit-user-password`, {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -122,13 +123,13 @@ class Settings extends React.Component {
                     }
                 }
             })
-            .catch(error => console.log(`Error: ${error}`))
+            .catch(error => console.log(error))
 
         event.preventDefault()
     }
 
     handleSubmitDelete = (event) => {
-        fetch('http://localhost:5001/task-manager-ed416/us-central1/api/delete-user', {
+        fetch(`${api}/delete-user`, {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -145,7 +146,7 @@ class Settings extends React.Component {
                     this.props.history.push('/')
                 }
             })
-            .catch(error => console.log(`Error: ${error}`))
+            .catch(error => console.log(error))
 
         event.preventDefault()
     }

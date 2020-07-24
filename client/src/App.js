@@ -20,24 +20,16 @@ import ListProjects from './ListProjects'
 import Settings from './Settings'
 import TaskChart from './TaskChart'
 
-// https://us-central1-task-manager-ed416.cloudfunctions.net/api
-
 /*
   TODO:
-  ** Fix content height from navbar
-  ** Shift subjects sideways
-  ** Quick tasks - fix height issue
-  ** Fix list-projects project deletion
-  ** Test settings page
-  ** Style task forms (name, priority)
-  ** Handle non-authentication in backend
-  ** Handle logout in navbar
-  ** Add due dates to task view
-  ** Login/signup error handling
-  * Make priority values/colors dynamic, and changeable in project edit
+  * Add react-alerts
+  * Implement priority sharing with other users
+  * Handle non auth for non-public routes
+  * Test settings page
+  * Make priority values/colors changeable in project edit
   * Add sign up button to home page
   * Set due date reminders
-  * Auto-change priority by due date
+  * Make auto change priority range customizable
 */
 
 function App() {

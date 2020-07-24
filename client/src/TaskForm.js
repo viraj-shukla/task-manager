@@ -1,9 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import './App.css';
 
 class TaskForm extends React.Component {
     render() {
+        let priorityKeys = Object.keys(this.props.priorityColors)
         return (
             <div class="edit-details-container">
                 <div class="input-container">
@@ -20,13 +20,26 @@ class TaskForm extends React.Component {
                 <div class="priority-container">
                     <select id="priority" 
                             name="priority" 
-                            value={this.props.priority}
+                            class="priority-select"
+                            value={`${this.props.priority}`}
                             onChange={this.props.handleChange}
+                            style={{
+                                backgroundColor: this.props.priorityColors[`${this.props.priority}`].color
+                            }}
                     >
-                        <option id="priority1" value={"1"}>High Priority</option>
-                        <option id="priority2" value={"2"}>Medium Priority</option>
-                        <option id="priority3" value={"3"}>Low Priority</option>
-                        <option id="priority4" value={"4"}>None Priority</option>
+                        {priorityKeys.map(priority => (
+                            <option 
+                                id={priority}
+                                class="priority-option"
+                                value={`${priority}`}
+                                style={{
+                                    backgroundColor: this.props.priorityColors[priority].color
+                                }}
+                            >
+                                {this.props.priorityColors[priority].name}
+                            </option>
+                        ))}
+
                     </select>
                 </div>
                 

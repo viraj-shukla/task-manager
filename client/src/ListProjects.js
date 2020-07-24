@@ -1,10 +1,8 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
+import api from './api'
 import './App.css';
-import EditAddHeader from './EditAddHeader';
 import TasksNavBar from './TasksNavBar'
 
 class EditTask extends React.Component {
@@ -13,13 +11,12 @@ class EditTask extends React.Component {
     }
 
     componentDidMount() {
-        fetch('http://localhost:5001/task-manager-ed416/us-central1/api/list-projects', {
+        fetch(`${api}/list-projects`, {
             method: 'POST',
             mode: 'cors',
             headers: {
                 "Content-type": "text/plain",
             },
-            //credentials: 'include',
             body: JSON.stringify({
                 foo: "bar"
             })
@@ -27,29 +24,29 @@ class EditTask extends React.Component {
             .then(res => res.text())
             .then(dataJSON => {
                 let data = JSON.parse(dataJSON)
-                console.log(data)
                 if (!data.error) {
                     this.setState({
                         projects: data.projects
                     })
                 }
+                if (data.error == "invalid user") {
+                    this.props.history.push('/login')
+                }
             })
-            .catch(error => console.log(`Error: ${error}`))
+            .catch(error => console.log(error))
     }
 
     handleAddProject = () => {
         this.props.history.push('/add-project')
     }
 
-    handleDelete = (event) => {
-        console.log(event.currentTarget.id)
-        fetch('http://localhost:5001/task-manager-ed416/us-central1/api/delete-project', {
+    handleSelect = (event) => {
+        fetch(`${api}/select-project`, {
             method: 'POST',
             mode: 'cors',
             headers: {
                 "Content-type": "text/plain",
             },
-            //credentials: 'include',
             body: JSON.stringify({
                 projectId: event.currentTarget.id
             })
@@ -57,12 +54,32 @@ class EditTask extends React.Component {
             .then(res => res.text())
             .then(dataJSON => {
                 let data = JSON.parse(dataJSON)
-                console.log(data)
+                if (!data.error) {
+                    this.props.history.push('/project')
+                }
+            })
+            .catch(error => console.log(error))
+    }
+
+    handleDelete = (event) => {
+        fetch(`${api}/delete-project`, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                "Content-type": "text/plain",
+            },
+            body: JSON.stringify({
+                projectId: event.currentTarget.id
+            })
+        })
+            .then(res => res.text())
+            .then(dataJSON => {
+                let data = JSON.parse(dataJSON)
                 if (!data.error) {
                     this.props.history.go(0)
                 }
             })
-            .catch(error => console.log(`Error: ${error}`))
+            .catch(error => console.log(error))
     }
 
     render() {
@@ -76,7 +93,7 @@ class EditTask extends React.Component {
                             <span class="list-projects-container-span">
                                 <b 
                                     class="project-name"
-                                    projectId={project.id}
+                                    id={project.id}
                                     onClick={this.handleSelect}
                                 >
                                     {project.name}

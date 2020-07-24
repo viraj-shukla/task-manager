@@ -1,6 +1,6 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSwatchbook, faAlignLeft, faChartBar } from '@fortawesome/free-solid-svg-icons';
+import { faSwatchbook, faAlignLeft, faChartBar, faHourglassHalf } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import './App.css';
 import HomeHavBar from './HomeNavBar';
@@ -22,11 +22,15 @@ class Home extends React.Component {
                         </div> 
                         <div class="home-feature">
                             <FontAwesomeIcon class="home-icon" icon={faAlignLeft} size="1x" />
-                            <p>Quick tasks for each project, for easy project-wide notes.</p>
+                            <p>Quick tasks for easy project-wide notes.</p>
                         </div> 
                         <div class="home-feature">
                             <FontAwesomeIcon class="home-icon" icon={faChartBar} size="1x" />
                             <p>See all your deadlines in a single chart.</p>
+                        </div>
+                        <div class="home-feature">
+                            <FontAwesomeIcon class="home-icon" icon={faHourglassHalf} size="1x" />
+                            <p>Tasks automatically increase in priority when a deadline is approaching.</p>
                         </div>
                         
                         
