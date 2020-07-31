@@ -92,7 +92,7 @@ app.post('/get-project', addHeaders, (req, res) => {
                         let isProjectModified = false
                         let taskFunc = (task) => {
                             //let taskDue = Date.parse()
-                            if (Date.parse(task.due) - currentDate.getTime() < 1000 * 60 * 60 * 24 * 2) {
+                            if (Date.parse(task.due) - currentDate.getTime() < 1000 * 60 * 60 * 24 * 1) {
                                 let newTask = task
                                 newTask.priority = "1"
                                 isProjectModified = true
@@ -137,19 +137,19 @@ app.post('/add-project', addHeaders, (req, res) => {
 
         let priorityColors = {
             "1": {
-                color: "#ed4c2f",
+                color: "#e64c2f",
                 name: "High Priority"
             },
             "2": {
-                color: "#f1da0b",
+                color: "#e3d237",
                 name: "Medium Priority"
             },
             "3": {
-                color: "#1dc434",
+                color: "#1ab02f",
                 name: "Low Priority"
             },
             "4": {
-                color: "#ebebeb",
+                color: "#dbdbdb",
                 name: "No Priority"
             }
         }
