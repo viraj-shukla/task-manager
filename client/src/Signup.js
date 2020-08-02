@@ -1,4 +1,6 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import api from './api'
 import './App.css';
@@ -10,7 +12,8 @@ class Signup extends React.Component {
         email: '',
         password: '',
         confirmPassword: '',
-        error: ''
+        error: '',
+        loading: false
     }
 
     handleChange = (event) => {
@@ -20,6 +23,9 @@ class Signup extends React.Component {
     }
 
     handleSubmit = (event) => {
+        this.setState({
+            loading: true
+        })
         fetch(`${api}/signup`, {
             method: 'POST',
             mode: 'cors',
@@ -149,7 +155,9 @@ class Signup extends React.Component {
                         <label class="form-label">Already have an account? <Link to='/login'>Log in</Link></label><br/>
 
                         <button type="submit" class="form-btn">
-                            Sign Up
+                            {this.state.loading && 
+                                <FontAwesomeIcon class="btn-spinner" icon={faSpinner} size="1x" />
+                            } Sign Up
                         </button>
                     </form>
                 </div>

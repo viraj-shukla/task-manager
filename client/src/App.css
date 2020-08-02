@@ -11,6 +11,10 @@ body {
     margin-top: 4em;
 }
 
+::-webkit-scrollbar {
+    width: 5px;
+}
+
 /* Nav bars */
 
 .nav {
@@ -287,6 +291,11 @@ button.btn:hover {
     background-color: #2152bbb6;
 }
 
+button.btn:focus {
+    outline: none;
+    box-shadow: none;
+}
+
 .edit-details-container {
     margin-left: 20px;
     display: block;
@@ -537,4 +546,29 @@ button.form-btn:hover {
 
 button.form-btn:focus {
     outline: 0;
+}
+
+
+@keyframes rotation {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(359deg); }
+}
+
+@-webkit-keyframes rotation {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(359deg); }
+}
+
+@-moz-keyframes rotation {
+    from { -moz-transform: rotate(0deg); }
+    to { -moz-transform: rotate(359deg); }
+}
+
+.btn-spinner {
+    animation: rotation 2s infinite linear;
+    -webkit-animation: rotation 2s infinite linear;
+    -moz-animation: rotation 2s infinite linear;
+    height: 1em;
+    vertical-align: middle;
+    margin-right: 5px;
 }

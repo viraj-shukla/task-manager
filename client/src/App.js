@@ -22,6 +22,7 @@ import TaskChart from './TaskChart'
 
 /*
   TODO:
+  * 404 page
   * Add react-alerts
   * Implement priority sharing with other users
   * Handle non auth for non-public routes
